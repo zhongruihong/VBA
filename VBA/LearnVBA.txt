@@ -163,9 +163,11 @@ Function getpychar(char)
     getpychar = "Z"
 
     Else '如果不是中文，则不处理
+     getpychar = ""
 
-    getpychar = char
+    'getpychar = char 可以为原字符
 
+    ' getpychar =""可以为空 
     End If
 
 End Function
