@@ -1,0 +1,53 @@
+Sub Xls2Mdb()
+    Dim filename, fn As Variant
+    Dim sh As Worksheet
+    Dim RowMax, Row, Str
+    Application.ScreenUpdating = False
+    '弹出选择文件框（只能选择.xlsx结尾的，如果是03版本，改成.xls即可）
+    filename = Application.GetOpenFilename("所有文件(*.xlsx),*.xlsx", , , , True)
+    If Not IsArray(filename) Then Exit Sub
+    '指定access名称和路径（和当前excel文件同路径）
+    mdb = "Database.accdb"
+    mdbPath = ThisWorkbook.Path & "\" & mdb
+    '创建一个操作access的应用
+    Set objAccess = CreateObject("Access.Application")
+     '打开指定的access文件
+        With objAccess.OpenCurrentDatabase(mdbPath)
+    '循环选择的excel文件
+    For Each fn In filename
+            '每次循环清空sql
+            Str = ""
+            createSql = ""
+            inSql = ""
+            '创建adodb连接
+            Set conn = CreateObject("adodb.connection")
+            conn.Open "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & mdbPath
+            fname = Dir(fn)
+            tname = Split(fname, ".")(0)
+            Workbooks.Open fname
+            For Each sh In ActiveWorkbook.Sheets
+                '查询excel数据
+                Sql = "SELECT * FROM [Excel 12.0;DATABASE=" & fn & ";].[" & sh.Name & "$];"
+                Set rs = conn.Execute(Sql)
+                Ar = rs.GetRows
+                RowMax = UBound(Ar, 2) '得到数组中数据的下标
+                '生成建表语句
+                createSql = "create table " & tname & " ("
+                For i = 0 To rs.Fields.Count - 1
+                    Str = rs(i).Name & " text(20)," & Str
+                Next
+                createSql = createSql & Left(Str, Len(Str) - 1) & ")"
+                conn.Execute (createSql)
+                '插入语句
+                inSql = "INSERT INTO " & tname & " " & Sql
+                conn.Execute (inSql)
+            Next
+            conn.Close
+            Workbooks(fname).Close False
+    Next
+    End With
+    MsgBox "数据导入完毕!", vbInformation, "^_^"
+    Set conn = Nothing
+    Application.ScreenUpdating = True
+End Sub
+
