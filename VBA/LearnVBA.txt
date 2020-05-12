@@ -1,3 +1,4 @@
+'多个excel导入access
 Sub Xls2Mdb()
     Dim filename, fn As Variant
     Dim sh As Worksheet
@@ -51,3 +52,120 @@ Sub Xls2Mdb()
     Application.ScreenUpdating = True
 End Sub
 
+
+'获取汉字首字母
+'逐个取ASC码
+
+Function getpy(str)
+
+    For i = 1 To Len(str)
+
+        getpy = getpy & getpychar(Mid(str, i, 1))
+
+    Next i
+
+End Function
+
+Function getpychar(char)
+
+    tmp = 65536 + Asc(char)
+
+    If (tmp >= 45217 And tmp <= 45252) Then
+
+    getpychar = "A"
+
+    ElseIf (tmp >= 45253 And tmp <= 45760) Then
+
+    getpychar = "B"
+
+    ElseIf (tmp >= 45761 And tmp <= 46317) Then
+
+    getpychar = "C"
+
+    ElseIf (tmp >= 46318 And tmp <= 46825) Then
+
+    getpychar = "D"
+
+    ElseIf (tmp >= 46826 And tmp <= 47009) Then
+
+    getpychar = "E"
+
+    ElseIf (tmp >= 47010 And tmp <= 47296) Then
+
+    getpychar = "F"
+
+    ElseIf (tmp >= 47297 And tmp <= 47613) Then
+
+    getpychar = "G"
+
+    ElseIf (tmp >= 47614 And tmp <= 48118) Then
+
+    getpychar = "H"
+
+    ElseIf (tmp >= 48119 And tmp <= 49061) Then
+
+    getpychar = "J"
+
+    ElseIf (tmp >= 49062 And tmp <= 49323) Then
+
+    getpychar = "K"
+
+    ElseIf (tmp >= 49324 And tmp <= 49895) Then
+
+    getpychar = "L"
+
+    ElseIf (tmp >= 49896 And tmp <= 50370) Then
+
+    getpychar = "M"
+
+    ElseIf (tmp >= 50371 And tmp <= 50613) Then
+
+    getpychar = "N"
+
+    ElseIf (tmp >= 50614 And tmp <= 50621) Then
+
+    getpychar = "O"
+
+    ElseIf (tmp >= 50622 And tmp <= 50905) Then
+
+    getpychar = "P"
+
+    ElseIf (tmp >= 50906 And tmp <= 51386) Then
+
+    getpychar = "Q"
+
+    ElseIf (tmp >= 51387 And tmp <= 51445) Then
+
+    getpychar = "R"
+
+    ElseIf (tmp >= 51446 And tmp <= 52217) Then
+
+    getpychar = "S"
+
+    ElseIf (tmp >= 52218 And tmp <= 52697) Then
+
+    getpychar = "T"
+
+    ElseIf (tmp >= 52698 And tmp <= 52979) Then
+
+    getpychar = "W"
+
+    ElseIf (tmp >= 52980 And tmp <= 53640) Then
+
+    getpychar = "X"
+
+    ElseIf (tmp >= 53679 And tmp <= 54480) Then
+
+    getpychar = "Y"
+
+    ElseIf (tmp >= 54481 And tmp <= 62289) Then
+
+    getpychar = "Z"
+
+    Else '如果不是中文，则不处理
+
+    getpychar = char
+
+    End If
+
+End Function
